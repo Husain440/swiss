@@ -1,0 +1,73 @@
+signup:
+{ "email":"", "password":"85jo!", "device_type":"A", "device_token":"asdfghjkldsadsd", "uuid":"dfbouihcvvxwhj", "os_version":"5.6.32", "device_name":"samsung", "model_name":"note10" }
+
+login:
+{ "email":"ayush12@gmail.com", "password":"ap12!", "device_type":"A", "device_token":"asdfghjksasasldsadsd", "uuid":"dfbouihcvvxwhjssas", "os_version":"6.6.32", "device_name":"samsung", "model_name":"galaxy7" } 
+
+{ "phone_no":"9106929023", "password":"chintan10", "device_type":"A", "device_token":"asdfghjksasasldsadsd", "uuid":"dfbouihcvvxwhjssas", "os_version":"6.6.32", "device_name":"samsung", "model_name":"galaxy7" }
+
+
+
+
+
+
+
+
+
+Recording:
+"https://us02web.zoom.us/rec/share/AhTxJkhKSvihbdAQ68ARLNIYtRCFdmE3K_iy6xb6ayj7ZrDfxplhylf4WQCVNW2C.aHRTGMCHmjrGuFfp 
+Passcode: 2c5Y%mt?"
+
+
+
+
+
+// Auth Function for Show Specs Details Via Sub Category
+        getProductList: function(request, callback){
+            console.log("===========>", request)
+            con.query("SELECT * from tbl_specs WHERE category_id = '" + request.category_id + "' AND sub_category_id = '" + request.sub_category_id + "' AND is_active = 1 AND is_deleted = 0 ORDER BY specs_name", function (err, result){
+                console.log("Error:---> ", result)
+                if(!err && result != undefined){
+                    asyncLoop(result, function (item, next) {
+                        // request.result = result;
+                        Auth.getSingleImage(item.id, function(code ,message, data){
+                            console.log("7986748465456", data)
+                            item.image = data;
+                            next();
+                        });
+                    }, function () {
+                        console.log("**************", result)
+                        callback('1', {
+                            keyword: 'txt_user_show_category_success',
+                            components: {}
+                        }, result); 
+                    });
+                }
+                else{
+                    callback('0', {
+                        keyword: 'txt_user_show_category_failed',
+                        components: {}
+                    }, null);
+                }
+            })
+        },
+
+        // For get One latest Image in Specs Details
+        getSingleImage: function(id, callback){
+            console.log(id)
+            con.query(`SELECT * from tbl_image WHERE specs_id = '`+ id +`' AND is_deleted = 0 AND is_active = 1 ORDER BY id desc LIMIT 1`, function(err, result){
+                console.log("=============", result)
+                if (!err && result.length > 0) {
+                    callback('1', {
+                        keyword: 'text_user_success',
+                        components: {}
+                    }, result);
+                }
+                else {
+                    callback('0', {
+                        keyword: 'text_user_something_wrong',
+                        components: {}
+                    }, null);
+                }
+            });
+        },
