@@ -220,7 +220,7 @@ export default function AddNewProduct() {
         setimageFileUrl(URL.createObjectURL(e.target.files[0]));
         setimageFile(e.target.files[0])
     }
-
+//sdknasnd
     const handleFileChange = async (e) => {
         // e.preventDefault();
         console.log("inside function")
